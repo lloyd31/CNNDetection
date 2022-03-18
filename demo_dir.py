@@ -36,12 +36,14 @@ if(not opt.size_only):
 
 # Transform
 trans_init = []
+img_size=(224,224)
 if(opt.crop is not None):
   trans_init = [transforms.CenterCrop(opt.crop),]
   print('Cropping to [%i]'%opt.crop)
 else:
   print('Not cropping')
-trans = transforms.Compose(trans_init + [
+trans = transforms.Resize(img_size),
+    transforms.Compose(trans_init + [
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
