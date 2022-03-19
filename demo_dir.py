@@ -7,6 +7,7 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import torch.utils.data
 import numpy as np
+from sklearn.metrics import confusion_matrix
 
 import matplotlib.pyplot as plt
 
@@ -86,17 +87,21 @@ print('Average sizes: [{:2.2f}+/-{:2.2f}] x [{:2.2f}+/-{:2.2f}] = [{:2.2f}+/-{:2
 print('Num reals: {}, Num fakes: {}'.format(np.sum(1-y_true), np.sum(y_true)))
 
 if(not opt.size_only):
+  
+  ap = average_precision_score(y_true, y_pred)
+  auc = roc_auc_score(y_true, y_pred)
+  
   r_acc = accuracy_score(y_true[y_true==0], y_pred[y_true==0] > 0.5)
   f_acc = accuracy_score(y_true[y_true==1], y_pred[y_true==1] > 0.5)
   acc = accuracy_score(y_true, y_pred > 0.5)
-  ap = average_precision_score(y_true, y_pred)
-  auc = roc_auc_score(y_true, y_pred)
   fpr, tpr,thresholds = roc_curve(y_true, y_pred, pos_label=1)
   print('AP: {:2.2f}, Acc: {:2.2f}, Acc (real): {:2.2f}, Acc (fake): {:2.2f}, AUC: {:2.2f}'.format(ap*100., acc*100., r_acc*100., f_acc*100., auc*100) )
-  
-  print('FPR: ',fpr)
-  print('TPR: ',tpr)
-  
+   
+    
+  mat = confusion_matrix(y_true, (y_pred > 0.5))
+  print('------CONFUSION MATRIX------')
+  print(mat)
+  print('----------------------------')
   plt.figure()
  
   plt.xlim([0.0, 1.0])
