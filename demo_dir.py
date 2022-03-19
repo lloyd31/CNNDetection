@@ -93,8 +93,13 @@ if(not opt.size_only):
   auc = roc_auc_score(y_true, y_pred)
   fpr, tpr,thresholds = roc_curve(y_true, y_pred, pos_label=1)
   print('AP: {:2.2f}, Acc: {:2.2f}, Acc (real): {:2.2f}, Acc (fake): {:2.2f}, AUC: {:2.2f}'.format(ap*100., acc*100., r_acc*100., f_acc*100., auc*100) )
-  print('FPR: {:2.2f}, TPR: {2.2f}'.format(fpr, tpr))
   
+  i=0
+  while i < len(fpr):  
+    
+    print('FPR: {:2.2f}, TPR: {2.2f}'.format(fpr[i], tpr[i]))
+    i+=1
+  print(thresholds)
   
   plt.figure()
  
