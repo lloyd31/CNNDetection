@@ -7,9 +7,12 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import torch.utils.data
 import numpy as np
+
+import matplotlib.pyplot as plt
+
 from sklearn.metrics import average_precision_score, precision_recall_curve, accuracy_score
 from sklearn.metrics import roc_auc_score
-
+from sklearn.metrics import roc_curve
 from networks.resnet import resnet50
 
 from tqdm import tqdm
@@ -87,8 +90,22 @@ if(not opt.size_only):
   f_acc = accuracy_score(y_true[y_true==1], y_pred[y_true==1] > 0.5)
   acc = accuracy_score(y_true, y_pred > 0.5)
   ap = average_precision_score(y_true, y_pred)
-  auc = roc_auc_score = roc_auc_score(y_true, y_pred)
+  auc = roc_auc_score(y_true, y_pred)
+  fpr, tpr,thresholds = roc_curve(y_true, y_pred, pos_label=1)
   print('AP: {:2.2f}, Acc: {:2.2f}, Acc (real): {:2.2f}, Acc (fake): {:2.2f}, AUC: {:2.2f}'.format(ap*100., acc*100., r_acc*100., f_acc*100., auc*100) )
+  print('FPR: {:2.2f}, TPR: {2.2f}'.format(fpr, tpr))
   
-
-
+  
+  plt.figure()
+ 
+  plt.xlim([0.0, 1.0])
+  plt.ylim([0.0, 1.05])
+  plt.xlabel("False Positive Rate")
+  plt.ylabel("True Positive Rate")
+  plt.title("Receiver operating characteristic")
+  plt.legend(loc="lower right")
+  
+  plt.plot(fpr, tpr, color="darkorange", lw=2, label  = 'ROC curve (area = %0.2f)' %auc)
+  plt.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")
+  plt.legend()
+  plt.show()
