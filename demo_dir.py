@@ -48,6 +48,7 @@ if(opt.crop is not None):
 else:
   print('Not cropping')
 trans = transforms.Compose(trans_init + [ transforms.Resize(img_size),
+    transforms.GaussianBlur(kernel_size=(5, 7), sigma=(0.5, 3)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
